@@ -1,4 +1,4 @@
-from db import get_users, insert_product, get_products, del_product
+from db import get_users, insert_product, get_products, del_product, insert_log
 from auth import login
 import os
 from time import sleep
@@ -26,6 +26,7 @@ def start_console_line():
             os.system('cls')
         else:
             print("Good verification!")
+            insert_log("cmd_verification")
             sleep(4)
             os.system('cls')
             return True
@@ -58,6 +59,7 @@ def add_product():
     print("Cost Can be Null")
     cost = int(input("Enter Cost :"))
     print(insert_product(name, cost))
+    insert_log("cmd_add_product")
     return "end"
 
 def delete_product():
@@ -68,5 +70,6 @@ def delete_product():
         print(f"ID : {product[0]} , Name: {product[1]}, Cost: {product[2]}")
     id = input("Enter ID : ")
     del_product(id)
+    insert_log("cmd_delete_product")
     return "end"
 

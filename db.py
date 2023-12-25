@@ -1,4 +1,5 @@
 import psycopg2
+from datetime import date
 from dotenv import dotenv_values
 config = dotenv_values(".env")
 def get_users() :
@@ -62,6 +63,21 @@ def del_product(id):
         conn = psycopg2.connect(dbname=config["DBNAME"], user=config["DBUSER"], password=config["DBPASSWORD"], host=config["DBHOST"])
         cur = conn.cursor()
         query = f"delete from products where id = {id}"
+        cur.execute(query)
+        conn.commit()
+        cur.close()
+        conn.close()
+        return "success"
+    except:
+        # в случае сбоя подключения будет выведено сообщение в STDOUT
+        print('Can`t establish connection to database')
+def insert_log(event):
+    try:
+        # пытаемся подключиться к базе данных
+        conn = psycopg2.connect(dbname=config["DBNAME"], user=config["DBUSER"], password=config["DBPASSWORD"], host=config["DBHOST"])
+        cur = conn.cursor()
+        today= date.today()
+        query = f"insert into logs (event,dt) values ('{event}', '{today}')"
         cur.execute(query)
         conn.commit()
         cur.close()

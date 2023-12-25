@@ -1,6 +1,6 @@
 import telebot
 from dotenv import dotenv_values
-from db import get_products , insert_request
+from db import get_products , insert_request, insert_log
 from datetime import datetime
 
 config = dotenv_values(".env")
@@ -9,6 +9,7 @@ token=config["TELEGRAMTOKEN"]
 bot=telebot.TeleBot(token)
 @bot.message_handler(commands=['start'])
 def start_message(message):
+  insert_log("bot_start_command")
   bot.send_message(message.chat.id,"Привет, тебя приветствует компания BITS IT.")
   bot.send_message(message.chat.id,"В данном боте ты можешь посмотреть спектр услуг, которые мы предоставляем и оставить заявку")
   products = get_products()
@@ -37,6 +38,7 @@ def get_request(message, index_array, id_array):
 def add_request(message, product_id):
   bot.send_message(message.chat.id,"Cпасибо большое за выбор продукта, мы обязательно свяжемся с вами в течении 15 минут.")
   insert_request(product_id, message.text, message.from_user.first_name)
+  insert_log("bot_add_request")
   print("NEW REQUEST FROM NUMBER : " + message.text + " , Product id : " + product_id + " , Name : " + message.from_user.first_name + "  | Date : " + datetime.now())
   
 
